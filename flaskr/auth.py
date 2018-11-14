@@ -13,7 +13,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login', _scheme="https", _external="True"))
 
         return view(**kwargs)
 
@@ -53,7 +53,7 @@ def register():
                 (username, generate_password_hash(password))
             )
             db.commit()
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login', _scheme="https", _external="True"))
 
         flash(error)
 
@@ -78,7 +78,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return redirect(url_for('index', _scheme="https", _external="True"))
 
         flash(error)
 
@@ -87,4 +87,4 @@ def login():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('index', _scheme="https", _external="True"))
